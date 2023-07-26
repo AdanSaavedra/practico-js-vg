@@ -27,9 +27,13 @@ function startGame(){
     game.font = elementSize + 'px Verdana'
     game.textAlign = 'end'
 
+    const map = maps[2];
+    const mapRows = map.trim().split("\n")
+    const mapRowCols = mapRows.map(row => row.trim().split(''))
+
     for (let i = 1; i <= 10; i++) {
         for (let j = 1; j <= 10; j++) {
-            game.fillText(emojis['X'], elementSize * i, elementSize * j) 
+            game.fillText(emojis[mapRowCols[i -1][j-1]], elementSize * j, elementSize * i) 
         } 
     }
 }
