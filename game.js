@@ -1,13 +1,14 @@
+// variables from html
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
 const spanLives = document.querySelector('#lives')
 const spanTime = document.querySelector('#time')
-
 const btnUp = document.querySelector('#up')
 const btnLeft = document.querySelector('#left')
 const btnRight = document.querySelector('#right')
 const btnDown = document.querySelector('#down')
 
+// Variables in js
 let canvasSize;
 let elementSize;
 let level = 0;
@@ -16,19 +17,24 @@ let timeStart;
 let timePlayer;
 let timeInterval
 
+// Player position before start
 const playerPosition = {
     x: undefined,
     y: undefined
 }
+// Gift position before start
 const giftPosition = {
     x: undefined,
     y: undefined
 }
+// bombs array
 let enemiesPosition= []
 
+// event listener when load and resize
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
 
+// Set canvas size and start game
 function setCanvasSize(){
     if(window.innerHeight > window.innerWidth){
         canvasSize = window.innerWidth * 0.8;
@@ -44,11 +50,11 @@ function setCanvasSize(){
 }
 
 function startGame(){
-    console.log({elementSize, canvasSize});
-
+    // Canvas settings
     game.font = elementSize + 'px Verdana'
     game.textAlign = 'end'
 
+    // set the map level
     const map = maps[level];
 
     if(!map){
@@ -73,6 +79,7 @@ function startGame(){
             const posX = elementSize * (colI + 1)
             const posY = elementSize * (rowI + 1)
 
+            // Assign start position
             if(col == 'O'){
                 if(!playerPosition.x && !playerPosition.y){
                     playerPosition.x = posX;
@@ -98,9 +105,11 @@ function startGame(){
 function movePlayer(){
     game.fillText(emojis['PLAYER'], playerPosition.x,playerPosition.y)
     console.log(playerPosition)
+    // verify if player is in the gift position, if true then go to next level
     if(Math.trunc(playerPosition.x) === Math.trunc(giftPosition.x) && Math.trunc(playerPosition.y) === Math.trunc(giftPosition.y)){
         levelWin()
     }
+    // verify if player is on a bomb position
     const enemyCollision = enemiesPosition.find(enemy =>{
         const enemyCollisionX = Math.trunc(enemy.x) == Math.trunc(playerPosition.x)
         const enemyCollisionY = Math.trunc(enemy.y) == Math.trunc(playerPosition.y)
@@ -120,7 +129,6 @@ function gameWin(){
     clearInterval(timeInterval)
 }
 function levelFailed(){
-    console.log('Chocaste perro')
     lives--;
     if(lives<= 0){
         level = 0;
@@ -131,13 +139,13 @@ function levelFailed(){
     playerPosition.y = undefined
     startGame()
 }
-
 function showLives(){
     spanLives.innerHTML = emojis['HEART'].repeat(lives)
 }
 function showTime(){
     spanTime.innerHTML = formatTime(Date.now() - timeStart)
 }
+// Formatting the time
 function formatTime(ms){
     const cs = parseInt(ms/10) % 100
     const seg = parseInt(ms/1000) % 60
@@ -148,12 +156,14 @@ function formatTime(ms){
     return `${minStr}:${segStr}:${csStr}`
 }
 
+// set listener to buttons
 window.addEventListener('keydown',moveByKeys)
 btnUp?.addEventListener('click', moveUp);
 btnLeft?.addEventListener('click', moveLeft);
 btnRight?.addEventListener('click', moveRight);
 btnDown?.addEventListener('click', moveDown);
 
+// set keys options
 function moveByKeys(event){
     if(event.key == 'ArrowUp' || event.key=='w' || event.key=='W') moveUp()
     else if(event.key == 'ArrowLeft' || event.key=='a' || event.key=='A') moveLeft()

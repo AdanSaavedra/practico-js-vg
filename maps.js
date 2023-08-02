@@ -15,6 +15,7 @@ const emojis = {
     'HEART': '❤️',
 };
 
+// Mapas
 const maps = [];
 maps.push(`
     IXXXXXXXXX
