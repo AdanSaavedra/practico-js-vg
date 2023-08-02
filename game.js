@@ -1,5 +1,7 @@
 const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
+const spanLives = document.querySelector('#lives')
+const spanTime = document.querySelector('#time')
 
 const btnUp = document.querySelector('#up')
 const btnLeft = document.querySelector('#left')
@@ -10,6 +12,9 @@ let canvasSize;
 let elementSize;
 let level = 0;
 let lives = 3; 
+let timeStart;
+let timePlayer;
+let timeInterval
 
 const playerPosition = {
     x: undefined,
@@ -50,10 +55,15 @@ function startGame(){
         gameWin();
         return
     }
+    if(!timeStart){
+        timeStart= Date.now()
+        timeInterval = setInterval(showTime,100);
+    }
 
     const mapRows = map.trim().split("\n")
     const mapRowCols = mapRows.map(row => row.trim().split(''))
 
+    showLives()
     enemiesPosition=[]
     game.clearRect(0,0,canvasSize, canvasSize)
 
@@ -107,6 +117,7 @@ function levelWin(){
 }
 function gameWin(){
     console.log('Terminaste')
+    clearInterval(timeInterval)
 }
 function levelFailed(){
     console.log('Chocaste perro')
@@ -114,10 +125,27 @@ function levelFailed(){
     if(lives<= 0){
         level = 0;
         lives = 3
+        timeStart = undefined
     }
     playerPosition.x = undefined
     playerPosition.y = undefined
     startGame()
+}
+
+function showLives(){
+    spanLives.innerHTML = emojis['HEART'].repeat(lives)
+}
+function showTime(){
+    spanTime.innerHTML = formatTime(Date.now() - timeStart)
+}
+function formatTime(ms){
+    const cs = parseInt(ms/10) % 100
+    const seg = parseInt(ms/1000) % 60
+    const min = parseInt(ms/60000) % 60
+    const csStr = `0${cs}`.slice(-2)
+    const segStr = `0${seg}`.slice(-2)
+    const minStr = `0${min}`.slice(-2)
+    return `${minStr}:${segStr}:${csStr}`
 }
 
 window.addEventListener('keydown',moveByKeys)
