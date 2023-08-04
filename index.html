@@ -8,7 +8,18 @@
   </head>
   <body>
     <div class="game-container">
-      <canvas id="game"></canvas>
+      <div class="canvasDiv">
+        <canvas id="game"></canvas>
+        <div id="restart" class="card">
+          <p id="result"></p>
+          <button type="button" id="restartButton">Volver a Jugar</button>
+        </div>
+        <div id="start" class="card">
+          <p>Haz click en el boton para empezar a jugar</p>
+          <p>Puedes moverte con los botones de abajo, o con tu teclado</p>
+          <button type="button" id="startButton">Jugar</button>
+        </div>
+      </div>
 
       <div class="btns">
         <button id="up">Arriba</button>
@@ -20,6 +31,7 @@
       <div class="messages">
         <p>Vidas: <span id="lives"></span></p>
         <p>Tiempo: ⏰<span id="time"></span></p>
+        <p>Record: 🏁<span id="record"></span></p>
       </div>
     </div>
 

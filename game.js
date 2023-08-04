@@ -3,10 +3,16 @@ const canvas = document.querySelector('#game');
 const game = canvas.getContext('2d');
 const spanLives = document.querySelector('#lives')
 const spanTime = document.querySelector('#time')
+const spanRecord = document.querySelector('#record')
+const pResult = document.querySelector('#result')
 const btnUp = document.querySelector('#up')
 const btnLeft = document.querySelector('#left')
 const btnRight = document.querySelector('#right')
 const btnDown = document.querySelector('#down')
+const btnStart = document.querySelector('#startButton')
+const divStart = document.querySelector('#start')
+const divRestart = document.querySelector('#restart')
+const btnRestart = document.querySelector('#restartButton')
 
 // Variables in js
 let canvasSize;
@@ -37,9 +43,9 @@ window.addEventListener('resize', setCanvasSize);
 // Set canvas size and start game
 function setCanvasSize(){
     if(window.innerHeight > window.innerWidth){
-        canvasSize = window.innerWidth * 0.8;
+        canvasSize = window.innerWidth * 0.7;
     }else{
-        canvasSize = window.innerHeight * 0.8
+        canvasSize = window.innerHeight * 0.7
     }
 
     canvas.setAttribute('width', canvasSize)
@@ -47,6 +53,17 @@ function setCanvasSize(){
 
     elementSize = (canvasSize / 10)
     startGame()
+}
+
+btnStart.addEventListener('click', pressPlay)
+function pressPlay(){
+    divStart.style.opacity = '0'
+    divStart.style.transition = '300ms'
+    if(!timeStart){
+        timeStart= Date.now()
+        timeInterval = setInterval(showTime,100);
+        showRecord();
+    }
 }
 
 function startGame(){
@@ -61,10 +78,8 @@ function startGame(){
         gameWin();
         return
     }
-    if(!timeStart){
-        timeStart= Date.now()
-        timeInterval = setInterval(showTime,100);
-    }
+    showRecord();
+    
 
     const mapRows = map.trim().split("\n")
     const mapRowCols = mapRows.map(row => row.trim().split(''))
@@ -104,7 +119,6 @@ function startGame(){
 
 function movePlayer(){
     game.fillText(emojis['PLAYER'], playerPosition.x,playerPosition.y)
-    console.log(playerPosition)
     // verify if player is in the gift position, if true then go to next level
     if(Math.trunc(playerPosition.x) === Math.trunc(giftPosition.x) && Math.trunc(playerPosition.y) === Math.trunc(giftPosition.y)){
         levelWin()
@@ -127,7 +141,26 @@ function levelWin(){
 function gameWin(){
     console.log('Terminaste')
     clearInterval(timeInterval)
+
+    const recordTime = localStorage.getItem('record_time');
+    const playerTime = formatTime(Date.now() - timeStart)
+    divRestart.style.opacity = '1'
+    divRestart.style.transition = '300ms'
+    divStart.style.zIndex='-999'
+    if(recordTime){
+        if (recordTime>= playerTime){
+            localStorage.setItem('record_time', playerTime)
+            pResult.innerHTML = 'Felicidades! Tienes un Nuevo Record!'
+        }else{
+            pResult.innerHTML = 'Vayaa... no lograste superar tu record.'
+        }
+    }else{
+        localStorage.setItem('record_time', playerTime)
+        pResult.innerHTML = 'Primera vez?'
+    }
+    console.log({recordTime, playerTime})
 }
+
 function levelFailed(){
     lives--;
     if(lives<= 0){
@@ -144,6 +177,9 @@ function showLives(){
 }
 function showTime(){
     spanTime.innerHTML = formatTime(Date.now() - timeStart)
+}
+function showRecord(){
+    spanRecord.innerHTML = localStorage.getItem('record_time')
 }
 // Formatting the time
 function formatTime(ms){
@@ -172,34 +208,33 @@ function moveByKeys(event){
 }
 function moveUp(){
     if(Math.trunc(playerPosition.y) > Math.trunc(elementSize)){
-        console.log('Me quiero mover hacia arriba')
         playerPosition.y-= elementSize;
         startGame()
     }
 }
 function moveLeft(){
     if(Math.trunc(playerPosition.x) > Math.trunc(elementSize)){
-        console.log('Me quiero mover hacia izq')
         playerPosition.x-= elementSize;
         startGame()
     }
 }
 function moveRight(){
     if(Math.ceil(playerPosition.x) < Math.trunc(canvasSize)){
-        console.log('Me quiero mover hacia der')
         playerPosition.x+= elementSize;
         startGame()
     }
 }
 function moveDown(){
     if(playerPosition.y < canvasSize){
-        console.log('Me quiero mover hacia abajo')
         playerPosition.y+= elementSize;
         startGame()
     }
     
 }
-
+btnRestart.addEventListener('click', pressRestart)
+function pressRestart(){
+    window.location.reload();
+}
 
 
 // for (let i = 1; i <= 10; i++) {

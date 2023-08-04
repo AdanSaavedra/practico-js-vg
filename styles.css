@@ -5,7 +5,12 @@ body {
     margin: 0;
     padding: 0;
 }
-
+.canvasDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .game-container {
     display: flex;
     align-items: center;
@@ -38,6 +43,33 @@ button {
     padding: 5px 20px;
     width: 100px;
 }
+.card{
+    width: 300px;
+    height: 140px;
+    padding: 30px;
+    position: absolute;
+    background-color: indigo;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+    border-radius: 8px;
+    border: 4px solid #ff6600;
+    
+}
+#start{
+    opacity: 1;
+}
+#restart{
+    opacity: 0;
+}
+#restartButton{
+    height: 38px;
+    width: 144px;
+    margin-top: 20px;
+}
 
 button:not(:last-child) {
     margin-right: 10px;
@@ -59,7 +91,7 @@ p {
 
 @media (max-width: 440px) {
     button {
-        margin-top: 25px;
+        margin-top: 5px;
     }
 
     #up,
